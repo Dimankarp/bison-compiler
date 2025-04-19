@@ -1,5 +1,6 @@
 #pragma once
 
+#include "operation.hpp"
 #include "parser.tab.hpp"
 #include <unordered_map>
 #include <string>
@@ -11,9 +12,9 @@ class driver {
 public:
   driver();
 
-  std::unordered_map<std::string, int> variables;
+  std::unordered_map<std::string, intrp::expr_t> variables;
   // Run the parser on file F.  Return 0 on success.
-  int parse(const std::string &f);
+  void parse(const std::string &f);
   // The name of the file being parsed.
   std::string file;
   // Whether to generate parser debug traces.
@@ -26,5 +27,4 @@ public:
   bool trace_scanning;
   // The token's location used by the scanner.
   yy::location location;
-  int result;
 };

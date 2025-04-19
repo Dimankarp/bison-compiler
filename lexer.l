@@ -18,7 +18,7 @@
 
 id    [a-zA-Z][a-zA-Z_0-9]*
 int   [0-9]+
-str   "[^"\n]*"
+str   \"[^"\n]*\"
 spc   [ \t]
 
 %{
@@ -38,6 +38,8 @@ spc   [ \t]
 
 {spc}+   loc.step();
 [\n]+      loc.lines (yyleng); loc.step();
+
+";"      return yy::parser::make_EOS(loc);
 
 "-"      return yy::parser::make_MINUS(loc);
 "+"      return yy::parser::make_PLUS(loc);
@@ -66,8 +68,19 @@ spc   [ \t]
 {str}      {
   std::string str_lit {yytext};
   auto len = str_lit.length();
-  str_lit.erase(0, 1).erase(len-1, len);
-  return yy::parser::make_STR(str_lit, yytext);
+  str_lit.erase(0, 1).erase(len-2, len);
+
+  // replacing \n with newline character
+  const std::string from = "\\n";
+  const std::string to = "\n";
+
+  size_t pos =0;
+  while((pos=str_lit.find(from, pos)) != std::string::npos) {
+    str_lit.replace(pos, from.length(), to);
+    pos += to.length();
+  }
+
+  return yy::parser::make_STR(str_lit, loc);
 }
 
 {int}      {

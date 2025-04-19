@@ -20,7 +20,7 @@ flex_target(LEXER ${LEXER_SOURCE} ${LEXER_OUTPUT_DIR}/lexer.cpp
            DEFINES_FILE ${LEXER_OUTPUT_DIR}/lexer.hpp)
 bison_target(PARSER ${PARSER_SOURCE} ${PARSER_OUTPUT_DIR}/parser.tab.cpp
             DEFINES_FILE ${PARSER_OUTPUT_DIR}/parser.tab.hpp
-            COMPILE_FLAGS "-v --language=c++")
+            COMPILE_FLAGS "-v --language=c++ -Wconflicts-sr -Wcounterexamples")
 
 add_flex_bison_dependency(LEXER PARSER)
 
@@ -35,6 +35,7 @@ add_executable(interpreter
     ${FLEX_LEXER_OUTPUTS}
     driver.cpp
     interpreter.cpp
+    operation.cpp
 )
 
 set_target_properties(interpreter PROPERTIES

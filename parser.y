@@ -7,11 +7,11 @@
 %define parse.assert
 
 %code requires {
-  #include<string>
-  #include<variant>
-  
+  #include "operation.hpp"
+  #include <string>
+  #include <variant>
+
   class driver;
-  using expr_t = std::variant<int,  std::string>;
 }
 
 // The parsing context.
@@ -25,12 +25,14 @@
 %define parse.error verbose
 
 %code {
-# include "driver.hpp"
+#include "driver.hpp"
+#include "operation.hpp"
 }
 
 %define api.token.prefix {TOK_}
 %token
   END  0  "end of file"
+  EOS     ";" // end of statement
   
   MINUS   "-"
   PLUS    "+"
@@ -57,12 +59,44 @@
 %token <std::string> STR "string"
 %token <std::string> ID "identifier"
 %token <int> NUM "number"
-%type  <expr_t> exp
+%type  <intrp::expr_t> exp
+
+%printer {
+  if(std::holds_alternative<int>($$))
+    yyoutput << std::get<int>($$);
+  else
+    yyoutput << std::get<std::string>($$);
+} <intrp::expr_t>;
+
 
 %printer { yyoutput << $$; } <*>;
 
 %%
-%start unit;
+%start program;
+program: statements {};
+
+statements:
+  %empty
+| statement statements {};
+
+statement: 
+  "print" exp ";" {
+   intrp::operator<<(std::cout, $2);}
+
+  | "identifier" "=" exp ";" {
+      drv.variables[$1] = $3;}
+  
+  | "if" exp "{" statements
+
+%left "+";
+
+exp:
+  exp "+" exp {$$ = intrp::expr_add($1, $3);}
+  | "string" {$$ = intrp::expr_t($1);};
+  | "number" {$$ = intrp::expr_t($1);};
+  | "identifier"  { $$ = drv.variables[$1]; }
+
+/*
 unit: assignments exp  { drv.result = $2; };
 
 assignments:
@@ -83,6 +117,7 @@ exp:
 | "(" exp ")"   { std::swap ($$, $2); }
 | "identifier"  { $$ = drv.variables[$1]; }
 | "number"      { std::swap ($$, $1); };
+*/
 %%
 
 void
