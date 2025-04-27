@@ -7,7 +7,8 @@
 %define parse.assert
 
 %code requires {
-  #include "operation.hpp"
+  #include "expression.hpp"
+  #include "statement.hpp"
   #include <string>
   #include <variant>
 
@@ -26,7 +27,8 @@
 
 %code {
 #include "driver.hpp"
-#include "operation.hpp"
+#include "expression.hpp"
+#include "statement.hpp"
 }
 
 %define api.token.prefix {TOK_}
@@ -59,42 +61,46 @@
 %token <std::string> STR "string"
 %token <std::string> ID "identifier"
 %token <int> NUM "number"
-%type  <intrp::expr_t> exp
-
-%printer {
-  if(std::holds_alternative<int>($$))
-    yyoutput << std::get<int>($$);
-  else
-    yyoutput << std::get<std::string>($$);
-} <intrp::expr_t>;
+%type  <std::unique_ptr<intrp::expression>> exp
+%type  <std::unique_ptr<intrp::statement>> statement
+%type  <std::unique_ptr<intrp::block_statement>> statements
 
 
-%printer { yyoutput << $$; } <*>;
+// %printer { yyoutput << $$; } <*>;
 
 %%
 %start program;
 program: statements {};
 
 statements:
-  %empty
-| statement statements {};
+  %empty {
+    $$ = std::make_unique<intrp::block_statement>();
+  }
+| statement statements {
+    $$ = std::move($2);
+    $2->add_statement(std::move($1));
+};
+
 
 statement: 
   "print" exp ";" {
-   intrp::operator<<(std::cout, $2);}
+    $$ = std::make_unique<intrp::print_statement>(std::move($2));
+  };
 
-  | "identifier" "=" exp ";" {
-      drv.variables[$1] = $3;}
+//  | "identifier" "=" exp ";" {
+//      drv.variables[$1] = $3;};
   
-  | "if" exp "{" statements
+//  | "if" exp "{" statements
 
 %left "+";
 
 exp:
-  exp "+" exp {$$ = intrp::expr_add($1, $3);}
-  | "string" {$$ = intrp::expr_t($1);};
-  | "number" {$$ = intrp::expr_t($1);};
-  | "identifier"  { $$ = drv.variables[$1]; }
+//  exp "+" exp {$$ = intrp::expr_add($1, $3);}
+//  | "string" {$$ = intrp::expr_t($1);};
+  "number" {
+    $$ = std::make_unique<intrp::literal_expression>(intrp::expr_t($1));
+  };
+  //  | "identifier"  { $$ = drv.variables[$1]; };
 
 /*
 unit: assignments exp  { drv.result = $2; };

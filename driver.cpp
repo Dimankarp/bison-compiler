@@ -8,7 +8,8 @@ void driver::parse(const std::string &f) {
   location.initialize(&file);
   scan_begin();
   yy::parser parser(*this);
-  parser.set_debug_level(trace_parsing);
+  parser.set_debug_level(
+      static_cast<yy::parser::debug_level_type>(trace_parsing));
   parser.parse();
   scan_end();
 }

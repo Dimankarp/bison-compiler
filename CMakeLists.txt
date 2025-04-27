@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.27)
 
 project(Interpreter CXX)
 
-
 find_package(FLEX REQUIRED)
 find_package(BISON REQUIRED)
 
@@ -36,6 +35,9 @@ add_executable(interpreter
     driver.cpp
     interpreter.cpp
     operation.cpp
+    expression.cpp
+    statement.cpp
+    visitor.cpp
 )
 
 set_target_properties(interpreter PROPERTIES

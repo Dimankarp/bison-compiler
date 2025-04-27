@@ -62,5 +62,21 @@
     "directory": "/home/dimankarp/compilers-dev/interpreter/build",
     "file": "/home/dimankarp/compilers-dev/interpreter/interpreter.cpp",
     "output": "/home/dimankarp/compilers-dev/interpreter/build/CMakeFiles/interpreter.dir/interpreter.cpp.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-I/home/dimankarp/compilers-dev/interpreter",
+      "-I/home/dimankarp/compilers-dev/interpreter/build",
+      "-g",
+      "-std=gnu++17",
+      "-c",
+      "-o",
+      "CMakeFiles/interpreter.dir/operation.cpp.o",
+      "/home/dimankarp/compilers-dev/interpreter/operation.cpp"
+    ],
+    "directory": "/home/dimankarp/compilers-dev/interpreter/build",
+    "file": "/home/dimankarp/compilers-dev/interpreter/operation.cpp",
+    "output": "/home/dimankarp/compilers-dev/interpreter/build/CMakeFiles/interpreter.dir/operation.cpp.o"
   }
 ]

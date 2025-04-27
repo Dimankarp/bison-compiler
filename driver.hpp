@@ -2,8 +2,8 @@
 
 #include "operation.hpp"
 #include "parser.tab.hpp"
-#include <unordered_map>
 #include <string>
+#include <unordered_map>
 
 #define YY_DECL yy::parser::symbol_type yylex(driver &drv)
 YY_DECL;
