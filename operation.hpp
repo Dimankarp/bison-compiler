@@ -20,5 +20,7 @@ template <typename T> T expect(const expr_t &a) {
 }
 
 expr_t expr_add(const expr_t &a, const expr_t &b);
+expr_t expr_negate(const expr_t &a);
 std::ostream &operator<<(std::ostream &output, const expr_t &expr);
+bool expr_to_bool(const expr_t &a);
 } // namespace intrp

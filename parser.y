@@ -70,15 +70,15 @@
 
 %%
 %start program;
-program: statements {};
+program: statements {drv.result = std::move($1);};
 
 statements:
   %empty {
     $$ = std::make_unique<intrp::block_statement>();
   }
 | statement statements {
-    $$ = std::move($2);
     $2->add_statement(std::move($1));
+    $$ = std::move($2);
 };
 
 

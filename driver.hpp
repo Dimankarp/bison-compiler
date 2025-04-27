@@ -8,13 +8,17 @@
 #define YY_DECL yy::parser::symbol_type yylex(driver &drv)
 YY_DECL;
 
+using var_table = std::unordered_map<std::string, intrp::expr_t>;
+
 class driver {
+
 public:
   driver();
+  std::unique_ptr<intrp::statement> result;
 
-  std::unordered_map<std::string, intrp::expr_t> variables;
+  std::shared_ptr<var_table> variables;
   // Run the parser on file F.  Return 0 on success.
-  void parse(const std::string &f);
+  std::unique_ptr<intrp::statement> parse(const std::string &f);
   // The name of the file being parsed.
   std::string file;
   // Whether to generate parser debug traces.

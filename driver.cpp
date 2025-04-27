@@ -3,7 +3,7 @@
 
 driver::driver() : trace_parsing(false), trace_scanning(false) {}
 
-void driver::parse(const std::string &f) {
+std::unique_ptr<intrp::statement> driver::parse(const std::string &f) {
   file = f;
   location.initialize(&file);
   scan_begin();
@@ -12,4 +12,5 @@ void driver::parse(const std::string &f) {
       static_cast<yy::parser::debug_level_type>(trace_parsing));
   parser.parse();
   scan_end();
+  return std::move(this->result);
 }

@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 namespace intrp {
-
+using std::unique_ptr;
 class statement_visitor;
 
 class statement {
@@ -16,52 +16,61 @@ public:
 
 class block_statement : public statement {
 private:
-  std::vector<std::unique_ptr<statement>> statements;
+  std::vector<unique_ptr<statement>> statements;
 
 public:
-  void add_statement(std::unique_ptr<statement> s);
+  void add_statement(unique_ptr<statement> s);
   void accept(statement_visitor &visitor) override;
+  const std::vector<unique_ptr<statement>> &get_statements() const;
 };
+
 class print_statement : public statement {
 private:
-  std::unique_ptr<expression> exp;
+  unique_ptr<expression> exp;
 
 public:
-  print_statement(std::unique_ptr<expression> exp);
+  print_statement(unique_ptr<expression> exp);
   void accept(statement_visitor &visitor) override;
+  const unique_ptr<expression> &get_exp() const;
 };
+
 class assign_statement : public statement {
 private:
   std::string identifier;
-  std::unique_ptr<expression> exp;
+  unique_ptr<expression> exp;
 
 public:
-  assign_statement(std::string &&id, std::unique_ptr<expression> exp);
+  assign_statement(std::string &&id, unique_ptr<expression> exp);
   void accept(statement_visitor &visitor) override;
+  const std::string &get_identifier() const;
+  const unique_ptr<expression> &get_exp() const;
 };
 
 class if_statement : public statement {
 private:
-  std::unique_ptr<expression> condition;
-  std::unique_ptr<block_statement> then_block;
-  std::optional<std::unique_ptr<block_statement>> else_block;
+  unique_ptr<expression> condition;
+  unique_ptr<block_statement> then_block;
+  std::optional<unique_ptr<block_statement>> else_block;
 
 public:
-  if_statement(std::unique_ptr<expression> cond,
-               std::unique_ptr<block_statement> then);
+  if_statement(unique_ptr<expression> cond, unique_ptr<block_statement> then);
   void accept(statement_visitor &visitor) override;
-  void add_else(std::unique_ptr<block_statement> else_block);
+  void add_else(unique_ptr<block_statement> else_block);
+  const unique_ptr<expression> &get_condition() const;
+  const unique_ptr<block_statement> &get_then_block() const;
+  const std::optional<unique_ptr<block_statement>> &get_else_block() const;
 };
 
 class while_statement : public statement {
 private:
-  std::unique_ptr<expression> condition;
-  std::unique_ptr<block_statement> block;
+  unique_ptr<expression> condition;
+  unique_ptr<block_statement> block;
 
 public:
-  while_statement(std::unique_ptr<expression> cond,
-                  std::unique_ptr<block_statement> block);
+  while_statement(unique_ptr<expression> cond,
+                  unique_ptr<block_statement> block);
   void accept(statement_visitor &visitor) override;
+  const unique_ptr<expression> &get_condition() const;
+  const unique_ptr<block_statement> &get_block() const;
 };
-
 } // namespace intrp
