@@ -55,6 +55,7 @@ spc   [ \t]
 "<="     return yy::parser::make_LESS_EQ(loc);
 ">="     return yy::parser::make_GRTR_EQ(loc);
 "=="     return yy::parser::make_EQUALS(loc);
+"!="     return yy::parser::make_NOTEQ(loc);
 
 "{"      return yy::parser::make_LCURL(loc); 
 "}"      return yy::parser::make_RCURL(loc); 

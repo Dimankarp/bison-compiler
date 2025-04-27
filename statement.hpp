@@ -40,7 +40,7 @@ private:
   unique_ptr<expression> exp;
 
 public:
-  assign_statement(std::string &&id, unique_ptr<expression> exp);
+  assign_statement(std::string &id, unique_ptr<expression> exp);
   void accept(statement_visitor &visitor) override;
   const std::string &get_identifier() const;
   const unique_ptr<expression> &get_exp() const;

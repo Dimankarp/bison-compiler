@@ -16,15 +16,41 @@ expr_t expr_add(const expr_t &a, const expr_t &b) {
   }
   const int aval = std::get<int>(a);
   const int bval = expect<int>(b);
-  return expr_t{aval + bval};
+  return aval + bval;
 }
 
-expr_t expr_negate(const expr_t &a) {
-  if (std::holds_alternative<std::string>(a)) {
-    throw unexpected_type_exception{};
-  }
-  return -std::get<int>(a);
+expr_t expr_sub(const expr_t &a, const expr_t &b) {
+  return expect<int>(a) - expect<int>(b);
 }
+expr_t expr_mul(const expr_t &a, const expr_t &b) {
+  return expect<int>(a) * expect<int>(b);
+}
+expr_t expr_div(const expr_t &a, const expr_t &b) {
+  return static_cast<int>(expect<int>(a) / expect<int>(b));
+}
+expr_t expr_mod(const expr_t &a, const expr_t &b) {
+  return expect<int>(a) % expect<int>(b);
+}
+expr_t expr_less(const expr_t &a, const expr_t &b) {
+  return expect<int>(a) < expect<int>(b);
+}
+expr_t expr_grtr(const expr_t &a, const expr_t &b) {
+  return expect<int>(a) > expect<int>(b);
+}
+expr_t expr_leq(const expr_t &a, const expr_t &b) {
+  return expect<int>(a) <= expect<int>(b);
+}
+expr_t expr_greq(const expr_t &a, const expr_t &b) {
+  return expect<int>(a) >= expect<int>(b);
+}
+expr_t expr_eq(const expr_t &a, const expr_t &b) {
+  return expect<int>(a) == expect<int>(b);
+}
+expr_t expr_neq(const expr_t &a, const expr_t &b) {
+  return expect<int>(a) != expect<int>(b);
+}
+
+expr_t expr_negate(const expr_t &a) { return -expect<int>(a); }
 
 bool expr_to_bool(const expr_t &a) {
   if (std::holds_alternative<std::string>(a)) {

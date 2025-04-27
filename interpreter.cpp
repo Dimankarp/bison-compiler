@@ -11,9 +11,13 @@ int main(int argc, char *argv[]) {
     else if (argv[i] == std::string("-s"))
       drv.trace_scanning = true;
     else {
-      auto result = drv.parse(argv[i]);
-      intrp::statement_executor exec{drv.variables};
-      auto tree = std::move(result);
+      if(drv.parse(argv[i])){
+        std::cout << "Failed to parse - exiting.\n";
+        exit(1);
+      };
+      auto variables = std::make_shared<var_table>();
+      intrp::statement_executor exec{variables};
+      auto tree = std::move(drv.result);
       tree->accept(exec);
     }
 }

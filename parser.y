@@ -49,6 +49,7 @@
   LESS_EQ "<="
   GRTR_EQ ">="
   EQUALS  "=="
+  NOTEQ "!="
   LCURL   "{"
   RCURL   "}"
   WHILE   "while"
@@ -76,54 +77,47 @@ statements:
   %empty {
     $$ = std::make_unique<intrp::block_statement>();
   }
-| statement statements {
-    $2->add_statement(std::move($1));
-    $$ = std::move($2);
+| statements statement {
+    $1->add_statement(std::move($2));
+    $$ = std::move($1);
 };
 
+%precedence "if";
+%precedence "else";
 
 statement: 
-  "print" exp ";" {
-    $$ = std::make_unique<intrp::print_statement>(std::move($2));
-  };
+  "print" exp ";"          {$$ = std::make_unique<intrp::print_statement>(std::move($2));}
+| "identifier" "=" exp ";" {$$ = std::make_unique<intrp::assign_statement>($1, std::move($3));}
+| "if" exp "{" statements "}" %prec "if" {$$ = std::make_unique<intrp::if_statement>(std::move($2), std::move($4));}
+| "if" exp "{" statements "}" "else" "{" statements "}" %prec "else" {
+  auto s = std::make_unique<intrp::if_statement>(std::move($2), std::move($4));
+  (*s).add_else(std::move($8));
+  $$ = std::move(s);}
+| "while" exp "{" statements "}" {$$ = std::make_unique<intrp::while_statement>(std::move($2), std::move($4));};
 
-//  | "identifier" "=" exp ";" {
-//      drv.variables[$1] = $3;};
-  
-//  | "if" exp "{" statements
-
-%left "+";
-
-exp:
-//  exp "+" exp {$$ = intrp::expr_add($1, $3);}
-//  | "string" {$$ = intrp::expr_t($1);};
-  "number" {
-    $$ = std::make_unique<intrp::literal_expression>(intrp::expr_t($1));
-  };
-  //  | "identifier"  { $$ = drv.variables[$1]; };
-
-/*
-unit: assignments exp  { drv.result = $2; };
-
-assignments:
-  %empty                 {}
-| assignments assignment {};
-
-assignment:
-  "identifier" ":=" exp { drv.variables[$1] = $3; };
-
+%left "<" ">" "<=" ">=" "==" "!=";
 %left "+" "-";
 %left "*" "/";
+%left "%";
+%precedence UMINUS;
 
 exp:
-  exp "+" exp   { $$ = $1 + $3; }
-| exp "-" exp   { $$ = $1 - $3; }
-| exp "*" exp   { $$ = $1 * $3; }
-| exp "/" exp   { $$ = $1 / $3; }
-| "(" exp ")"   { std::swap ($$, $2); }
-| "identifier"  { $$ = drv.variables[$1]; }
-| "number"      { std::swap ($$, $1); };
-*/
+  exp "+" exp           {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::ADD, std::move($1), std::move($3));}
+| exp "-" exp           {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::SUB, std::move($1), std::move($3));}
+| exp "*" exp           {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::MUL, std::move($1), std::move($3));}
+| exp "/" exp           {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::DIV, std::move($1), std::move($3));}
+| exp "%" exp           {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::MOD, std::move($1), std::move($3));}
+| exp "<" exp           {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::LESS, std::move($1), std::move($3));}
+| exp ">" exp           {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::GRTR, std::move($1), std::move($3));}
+| exp "<=" exp          {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::LEQ, std::move($1), std::move($3));}
+| exp ">=" exp          {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::GREQ, std::move($1), std::move($3));}
+| exp "==" exp          {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::EQ, std::move($1), std::move($3));}
+| exp "!=" exp          {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::NEQ, std::move($1), std::move($3));}
+| "-" exp %prec UMINUS  {$$ = std::make_unique<intrp::unarop_expression>(intrp::unarop::MINUS, std::move($2));}
+| "string"              {$$ = std::make_unique<intrp::literal_expression>(intrp::expr_t($1));}
+| "number"              {$$ = std::make_unique<intrp::literal_expression>(intrp::expr_t($1));}
+| "identifier"          {$$ = std::make_unique<intrp::identifier_expression>($1);};
+
 %%
 
 void

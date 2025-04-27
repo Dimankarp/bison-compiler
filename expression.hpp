@@ -15,7 +15,7 @@ public:
   virtual void accept(expression_visitor &) = 0;
 };
 
-enum class binop : char { ADD };
+enum class binop : char { ADD, SUB, MUL, DIV, MOD, LESS, GRTR, LEQ, GREQ, EQ, NEQ };
 
 class binop_expression : public expression {
 private:

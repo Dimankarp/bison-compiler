@@ -28,7 +28,7 @@ void print_statement::accept(statement_visitor &visitor) {
 const unique_ptr<expression> &print_statement::get_exp() const { return exp; }
 
 // Assign
-assign_statement::assign_statement(std::string &&id, unique_ptr<expression> exp)
+assign_statement::assign_statement(std::string &id, unique_ptr<expression> exp)
     : identifier(id), exp(std::move(exp)) {}
 void assign_statement::accept(statement_visitor &visitor) {
   visitor.visit_assign(*this);

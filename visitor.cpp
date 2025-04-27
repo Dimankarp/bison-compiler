@@ -54,14 +54,43 @@ expression_executor::expression_executor(std::shared_ptr<var_table> table)
 std::optional<expr_t> expression_executor::get_result() const { return result; }
 
 void expression_executor::visit_binop(const binop_expression &e) {
+  e.get_left()->accept(*this);
+  const expr_t a = result.value();
+  e.get_right()->accept(*this);
+  const expr_t b = result.value();
   switch (e.get_op()) {
-
   case binop::ADD:
-    e.get_left()->accept(*this);
-    const expr_t a = result.value();
-    e.get_right()->accept(*this);
-    const expr_t b = result.value();
     result = expr_add(a, b);
+    break;
+  case binop::SUB:
+    result = expr_sub(a, b);
+    break;
+  case binop::MUL:
+    result = expr_mul(a, b);
+    break;
+  case binop::DIV:
+    result = expr_div(a, b);
+    break;
+  case binop::MOD:
+    result = expr_mod(a, b);
+    break;
+  case binop::LESS:
+    result = expr_less(a, b);
+    break;
+  case binop::GRTR:
+    result = expr_grtr(a, b);
+    break;
+  case binop::LEQ:
+    result = expr_leq(a, b);
+    break;
+  case binop::GREQ:
+    result = expr_greq(a, b);
+    break;
+  case binop::EQ:
+    result = expr_eq(a, b);
+    break;
+  case binop::NEQ:
+    result = expr_neq(a, b);
     break;
   }
 }

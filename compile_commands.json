@@ -8,11 +8,123 @@
       "-std=gnu++17",
       "-c",
       "-o",
+      "CMakeFiles/interpreter.dir/parser.tab.cpp.o",
+      "/home/dimankarp/compilers-dev/interpreter/build/parser.tab.cpp"
+    ],
+    "directory": "/home/dimankarp/compilers-dev/interpreter/build",
+    "file": "/home/dimankarp/compilers-dev/interpreter/build/parser.tab.cpp",
+    "output": "/home/dimankarp/compilers-dev/interpreter/build/CMakeFiles/interpreter.dir/parser.tab.cpp.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-I/home/dimankarp/compilers-dev/interpreter",
+      "-I/home/dimankarp/compilers-dev/interpreter/build",
+      "-g",
+      "-std=gnu++17",
+      "-c",
+      "-o",
+      "CMakeFiles/interpreter.dir/lexer.cpp.o",
+      "/home/dimankarp/compilers-dev/interpreter/build/lexer.cpp"
+    ],
+    "directory": "/home/dimankarp/compilers-dev/interpreter/build",
+    "file": "/home/dimankarp/compilers-dev/interpreter/build/lexer.cpp",
+    "output": "/home/dimankarp/compilers-dev/interpreter/build/CMakeFiles/interpreter.dir/lexer.cpp.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-I/home/dimankarp/compilers-dev/interpreter",
+      "-I/home/dimankarp/compilers-dev/interpreter/build",
+      "-g",
+      "-std=gnu++17",
+      "-c",
+      "-o",
+      "CMakeFiles/interpreter.dir/driver.cpp.o",
+      "/home/dimankarp/compilers-dev/interpreter/driver.cpp"
+    ],
+    "directory": "/home/dimankarp/compilers-dev/interpreter/build",
+    "file": "/home/dimankarp/compilers-dev/interpreter/driver.cpp",
+    "output": "/home/dimankarp/compilers-dev/interpreter/build/CMakeFiles/interpreter.dir/driver.cpp.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-I/home/dimankarp/compilers-dev/interpreter",
+      "-I/home/dimankarp/compilers-dev/interpreter/build",
+      "-g",
+      "-std=gnu++17",
+      "-c",
+      "-o",
       "CMakeFiles/interpreter.dir/interpreter.cpp.o",
       "/home/dimankarp/compilers-dev/interpreter/interpreter.cpp"
     ],
     "directory": "/home/dimankarp/compilers-dev/interpreter/build",
     "file": "/home/dimankarp/compilers-dev/interpreter/interpreter.cpp",
     "output": "/home/dimankarp/compilers-dev/interpreter/build/CMakeFiles/interpreter.dir/interpreter.cpp.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-I/home/dimankarp/compilers-dev/interpreter",
+      "-I/home/dimankarp/compilers-dev/interpreter/build",
+      "-g",
+      "-std=gnu++17",
+      "-c",
+      "-o",
+      "CMakeFiles/interpreter.dir/operation.cpp.o",
+      "/home/dimankarp/compilers-dev/interpreter/operation.cpp"
+    ],
+    "directory": "/home/dimankarp/compilers-dev/interpreter/build",
+    "file": "/home/dimankarp/compilers-dev/interpreter/operation.cpp",
+    "output": "/home/dimankarp/compilers-dev/interpreter/build/CMakeFiles/interpreter.dir/operation.cpp.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-I/home/dimankarp/compilers-dev/interpreter",
+      "-I/home/dimankarp/compilers-dev/interpreter/build",
+      "-g",
+      "-std=gnu++17",
+      "-c",
+      "-o",
+      "CMakeFiles/interpreter.dir/expression.cpp.o",
+      "/home/dimankarp/compilers-dev/interpreter/expression.cpp"
+    ],
+    "directory": "/home/dimankarp/compilers-dev/interpreter/build",
+    "file": "/home/dimankarp/compilers-dev/interpreter/expression.cpp",
+    "output": "/home/dimankarp/compilers-dev/interpreter/build/CMakeFiles/interpreter.dir/expression.cpp.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-I/home/dimankarp/compilers-dev/interpreter",
+      "-I/home/dimankarp/compilers-dev/interpreter/build",
+      "-g",
+      "-std=gnu++17",
+      "-c",
+      "-o",
+      "CMakeFiles/interpreter.dir/statement.cpp.o",
+      "/home/dimankarp/compilers-dev/interpreter/statement.cpp"
+    ],
+    "directory": "/home/dimankarp/compilers-dev/interpreter/build",
+    "file": "/home/dimankarp/compilers-dev/interpreter/statement.cpp",
+    "output": "/home/dimankarp/compilers-dev/interpreter/build/CMakeFiles/interpreter.dir/statement.cpp.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-I/home/dimankarp/compilers-dev/interpreter",
+      "-I/home/dimankarp/compilers-dev/interpreter/build",
+      "-g",
+      "-std=gnu++17",
+      "-c",
+      "-o",
+      "CMakeFiles/interpreter.dir/visitor.cpp.o",
+      "/home/dimankarp/compilers-dev/interpreter/visitor.cpp"
+    ],
+    "directory": "/home/dimankarp/compilers-dev/interpreter/build",
+    "file": "/home/dimankarp/compilers-dev/interpreter/visitor.cpp",
+    "output": "/home/dimankarp/compilers-dev/interpreter/build/CMakeFiles/interpreter.dir/visitor.cpp.o"
   }
 ]

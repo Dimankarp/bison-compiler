@@ -15,10 +15,8 @@ class driver {
 public:
   driver();
   std::unique_ptr<intrp::statement> result;
-
-  std::shared_ptr<var_table> variables;
   // Run the parser on file F.  Return 0 on success.
-  std::unique_ptr<intrp::statement> parse(const std::string &f);
+  int parse(const std::string &f);
   // The name of the file being parsed.
   std::string file;
   // Whether to generate parser debug traces.
