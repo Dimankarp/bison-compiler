@@ -1,14 +1,13 @@
 #pragma once
 
+#include "exception.hpp"
 #include "expression.hpp"
 #include <variant>
 namespace intrp {
 
-class unexpected_type_exception {};
-
 template <typename T> T expect(const expr_t &a) {
   if (!std::holds_alternative<T>(a))
-    throw unexpected_type_exception{};
+    throw unexpected_type_exception();
   return std::get<T>(a);
 }
 

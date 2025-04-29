@@ -7,8 +7,6 @@
 
 namespace intrp {
 
-class undeclared_variable_exception {};
-
 statement_executor::statement_executor(std::shared_ptr<var_table> table)
     : table(std::move(table)) {};
 
@@ -58,50 +56,59 @@ void expression_executor::visit_binop(const binop_expression &e) {
   const expr_t a = result.value();
   e.get_right()->accept(*this);
   const expr_t b = result.value();
-  switch (e.get_op()) {
-  case binop::ADD:
-    result = expr_add(a, b);
-    break;
-  case binop::SUB:
-    result = expr_sub(a, b);
-    break;
-  case binop::MUL:
-    result = expr_mul(a, b);
-    break;
-  case binop::DIV:
-    result = expr_div(a, b);
-    break;
-  case binop::MOD:
-    result = expr_mod(a, b);
-    break;
-  case binop::LESS:
-    result = expr_less(a, b);
-    break;
-  case binop::GRTR:
-    result = expr_grtr(a, b);
-    break;
-  case binop::LEQ:
-    result = expr_leq(a, b);
-    break;
-  case binop::GREQ:
-    result = expr_greq(a, b);
-    break;
-  case binop::EQ:
-    result = expr_eq(a, b);
-    break;
-  case binop::NEQ:
-    result = expr_neq(a, b);
-    break;
+  try {
+    switch (e.get_op()) {
+    case binop::ADD:
+      result = expr_add(a, b);
+      break;
+    case binop::SUB:
+      result = expr_sub(a, b);
+      break;
+    case binop::MUL:
+      result = expr_mul(a, b);
+      break;
+    case binop::DIV:
+      result = expr_div(a, b);
+      break;
+    case binop::MOD:
+      result = expr_mod(a, b);
+      break;
+    case binop::LESS:
+      result = expr_less(a, b);
+      break;
+    case binop::GRTR:
+      result = expr_grtr(a, b);
+      break;
+    case binop::LEQ:
+      result = expr_leq(a, b);
+      break;
+    case binop::GREQ:
+      result = expr_greq(a, b);
+      break;
+    case binop::EQ:
+      result = expr_eq(a, b);
+      break;
+    case binop::NEQ:
+      result = expr_neq(a, b);
+      break;
+    }
+  } catch (unexpected_type_exception &excp) {
+    excp.loc = e.get_loc();
+    throw excp;
   }
 }
 
 void expression_executor::visit_unarop(const unarop_expression &e) {
-  switch (e.get_op()) {
-
-  case unarop::MINUS:
-    e.get_exp()->accept(*this);
-    result = expr_negate(result.value());
-    break;
+  try {
+    switch (e.get_op()) {
+    case unarop::MINUS:
+      e.get_exp()->accept(*this);
+      result = expr_negate(result.value());
+      break;
+    }
+  } catch (unexpected_type_exception &excp) {
+    excp.loc = e.get_loc();
+    throw excp;
   }
 }
 void expression_executor::visit_literal(const literal_expression &e) {
@@ -109,8 +116,12 @@ void expression_executor::visit_literal(const literal_expression &e) {
 }
 void expression_executor::visit_identifier(const identifier_expression &e) {
   auto var = (*table).find(e.get_identificator());
-  if (var == (*table).end())
-    throw undeclared_variable_exception{};
+  if (var == (*table).end()) {
+    auto loc = e.get_loc();
+    throw undeclared_variable_exception{
+        {"referencing undeclared variable " + e.get_identificator(),
+         e.get_loc()}};
+  }
   result = var->second;
 };
 

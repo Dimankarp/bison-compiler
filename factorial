@@ -7,3 +7,4 @@ while i <= target {
     i = i + 1;
 }
 print fac;
+print "\n";

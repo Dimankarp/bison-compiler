@@ -37,7 +37,7 @@ spc   [ \t]
 %}
 
 {spc}+   loc.step();
-[\n]+      loc.lines (yyleng); loc.step();
+[\n]+    loc.lines (yyleng); loc.step();
 
 ";"      return yy::parser::make_EOS(loc);
 

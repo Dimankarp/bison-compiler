@@ -1,5 +1,6 @@
 #pragma once
 #include "expression.hpp"
+#include "location.hh"
 #include <memory>
 #include <optional>
 #include <string>
@@ -9,9 +10,14 @@ using std::unique_ptr;
 class statement_visitor;
 
 class statement {
+private:
+  yy::location loc;
+
 public:
   virtual ~statement() = default;
   virtual void accept(statement_visitor &) = 0;
+  statement(yy::location loc);
+  yy::location get_loc() const;
 };
 
 class block_statement : public statement {
@@ -19,6 +25,7 @@ private:
   std::vector<unique_ptr<statement>> statements;
 
 public:
+  block_statement(yy::location loc);
   void add_statement(unique_ptr<statement> s);
   void accept(statement_visitor &visitor) override;
   const std::vector<unique_ptr<statement>> &get_statements() const;
@@ -29,7 +36,7 @@ private:
   unique_ptr<expression> exp;
 
 public:
-  print_statement(unique_ptr<expression> exp);
+  print_statement(unique_ptr<expression> exp, yy::location loc);
   void accept(statement_visitor &visitor) override;
   const unique_ptr<expression> &get_exp() const;
 };
@@ -40,7 +47,8 @@ private:
   unique_ptr<expression> exp;
 
 public:
-  assign_statement(std::string &id, unique_ptr<expression> exp);
+  assign_statement(std::string &id, unique_ptr<expression> exp,
+                   yy::location loc);
   void accept(statement_visitor &visitor) override;
   const std::string &get_identifier() const;
   const unique_ptr<expression> &get_exp() const;
@@ -53,7 +61,8 @@ private:
   std::optional<unique_ptr<block_statement>> else_block;
 
 public:
-  if_statement(unique_ptr<expression> cond, unique_ptr<block_statement> then);
+  if_statement(unique_ptr<expression> cond, unique_ptr<block_statement> then,
+               yy::location loc);
   void accept(statement_visitor &visitor) override;
   void add_else(unique_ptr<block_statement> else_block);
   const unique_ptr<expression> &get_condition() const;
@@ -68,7 +77,7 @@ private:
 
 public:
   while_statement(unique_ptr<expression> cond,
-                  unique_ptr<block_statement> block);
+                  unique_ptr<block_statement> block, yy::location loc);
   void accept(statement_visitor &visitor) override;
   const unique_ptr<expression> &get_condition() const;
   const unique_ptr<block_statement> &get_block() const;

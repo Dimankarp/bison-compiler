@@ -38,6 +38,7 @@ add_executable(interpreter
     expression.cpp
     statement.cpp
     visitor.cpp
+    exception.cpp
 )
 
 set_target_properties(interpreter PROPERTIES

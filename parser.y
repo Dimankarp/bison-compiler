@@ -75,7 +75,7 @@ program: statements {drv.result = std::move($1);};
 
 statements:
   %empty {
-    $$ = std::make_unique<intrp::block_statement>();
+    $$ = std::make_unique<intrp::block_statement>(@$);
   }
 | statements statement {
     $1->add_statement(std::move($2));
@@ -86,14 +86,14 @@ statements:
 %precedence "else";
 
 statement: 
-  "print" exp ";"          {$$ = std::make_unique<intrp::print_statement>(std::move($2));}
-| "identifier" "=" exp ";" {$$ = std::make_unique<intrp::assign_statement>($1, std::move($3));}
-| "if" exp "{" statements "}" %prec "if" {$$ = std::make_unique<intrp::if_statement>(std::move($2), std::move($4));}
+  "print" exp ";"          {$$ = std::make_unique<intrp::print_statement>(std::move($2), @$);}
+| "identifier" "=" exp ";" {$$ = std::make_unique<intrp::assign_statement>($1, std::move($3), @$);}
+| "if" exp "{" statements "}" %prec "if" {$$ = std::make_unique<intrp::if_statement>(std::move($2), std::move($4), @$);}
 | "if" exp "{" statements "}" "else" "{" statements "}" %prec "else" {
-  auto s = std::make_unique<intrp::if_statement>(std::move($2), std::move($4));
+  auto s = std::make_unique<intrp::if_statement>(std::move($2), std::move($4), @$);
   (*s).add_else(std::move($8));
   $$ = std::move(s);}
-| "while" exp "{" statements "}" {$$ = std::make_unique<intrp::while_statement>(std::move($2), std::move($4));};
+| "while" exp "{" statements "}" {$$ = std::make_unique<intrp::while_statement>(std::move($2), std::move($4), @$);};
 
 %left "<" ">" "<=" ">=" "==" "!=";
 %left "+" "-";
@@ -102,21 +102,21 @@ statement:
 %precedence UMINUS;
 
 exp:
-  exp "+" exp           {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::ADD, std::move($1), std::move($3));}
-| exp "-" exp           {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::SUB, std::move($1), std::move($3));}
-| exp "*" exp           {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::MUL, std::move($1), std::move($3));}
-| exp "/" exp           {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::DIV, std::move($1), std::move($3));}
-| exp "%" exp           {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::MOD, std::move($1), std::move($3));}
-| exp "<" exp           {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::LESS, std::move($1), std::move($3));}
-| exp ">" exp           {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::GRTR, std::move($1), std::move($3));}
-| exp "<=" exp          {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::LEQ, std::move($1), std::move($3));}
-| exp ">=" exp          {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::GREQ, std::move($1), std::move($3));}
-| exp "==" exp          {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::EQ, std::move($1), std::move($3));}
-| exp "!=" exp          {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::NEQ, std::move($1), std::move($3));}
-| "-" exp %prec UMINUS  {$$ = std::make_unique<intrp::unarop_expression>(intrp::unarop::MINUS, std::move($2));}
-| "string"              {$$ = std::make_unique<intrp::literal_expression>(intrp::expr_t($1));}
-| "number"              {$$ = std::make_unique<intrp::literal_expression>(intrp::expr_t($1));}
-| "identifier"          {$$ = std::make_unique<intrp::identifier_expression>($1);};
+  exp "+" exp           {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::ADD, std::move($1), std::move($3), @$);}
+| exp "-" exp           {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::SUB, std::move($1), std::move($3), @$);}
+| exp "*" exp           {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::MUL, std::move($1), std::move($3), @$);}
+| exp "/" exp           {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::DIV, std::move($1), std::move($3), @$);}
+| exp "%" exp           {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::MOD, std::move($1), std::move($3), @$);}
+| exp "<" exp           {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::LESS, std::move($1), std::move($3), @$);}
+| exp ">" exp           {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::GRTR, std::move($1), std::move($3), @$);}
+| exp "<=" exp          {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::LEQ, std::move($1), std::move($3), @$);}
+| exp ">=" exp          {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::GREQ, std::move($1), std::move($3), @$);}
+| exp "==" exp          {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::EQ, std::move($1), std::move($3), @$);}
+| exp "!=" exp          {$$ = std::make_unique<intrp::binop_expression>(intrp::binop::NEQ, std::move($1), std::move($3), @$);}
+| "-" exp %prec UMINUS  {$$ = std::make_unique<intrp::unarop_expression>(intrp::unarop::MINUS, std::move($2), @$);}
+| "string"              {$$ = std::make_unique<intrp::literal_expression>(intrp::expr_t($1), @$);}
+| "number"              {$$ = std::make_unique<intrp::literal_expression>(intrp::expr_t($1), @$);}
+| "identifier"          {$$ = std::make_unique<intrp::identifier_expression>($1, @$);};
 
 %%
 
